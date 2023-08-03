@@ -10,7 +10,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY o
 See the GNU General Public License for more details. A copy of this license can be found within the GitHub repository
 for music-transformer, or at https://www.gnu.org/licenses/gpl-3.0.html.
 """
-
+import csv
 import argparse
 import time
 import os
@@ -267,6 +267,27 @@ class MusicTransformerTrainer:
 
         return
 
+    def write_to_csv(self, data, filename='training_data.csv'):
+        # Check if the file exists
+        file_exists = False
+        try:
+            with open(filename, 'r') as file:
+                file_exists = True
+        except FileNotFoundError:
+            pass
+
+        # Open the CSV file in append mode
+        with open(filename, 'a', newline='') as file:
+            writer = csv.writer(file)
+
+            # If the file doesn't exist, write the header first
+            if not file_exists:
+                header = ['Epoch', 'Time Taken', 'Training Loss', 'Validation Loss']  # Replace with your desired column names
+                writer.writerow(header)
+
+            # Write the data to the CSV file
+            writer.writerow(data)
+
     def fit(self, epochs):
         """
         Training loop to fit the model to the data stored at the passed in datapath. If KeyboardInterrupt at anytime
@@ -317,6 +338,7 @@ class MusicTransformerTrainer:
                     # print("Checkpointing...")
                     # self.save()
                     # print("Done")
+                    self.write_to_csv([epoch + 1, round(time.time() - start, 2), train_losses[-1], val_losses[-1]])
                     start = time.time()
 
         except KeyboardInterrupt:
