@@ -148,7 +148,7 @@ class MusicTransformerTrainer:
     """
 
     def __init__(self, hparams_, datapath, batch_size, warmup_steps=4000,
-                 ckpt_path="music_transformer_ckpt.pt", load_from_checkpoint=False):
+                 ckpt_path="music_transformer_ckpt.pt", load_from_checkpoint=True):
         """
         Args:
             hparams_: hyperparameters of the model
